@@ -12,7 +12,7 @@ uint16_t au16data[16] = {
  *  u8txenpin : 0 for RS-232 and USB-FTDI 
  *               or any pin number > 1 for RS-485
  */
-Modbus slave(1,0,0); // this is slave @1 and RS-232 or USB-FTDI
+Modbus slave(1,Serial,0); // this is slave @1 and RS-232 or USB-FTDI
 
 int thermoDO = 4;
 int thermoCS = 5;
@@ -23,7 +23,8 @@ MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
 int relay = 9;  
   
 void setup() {
-  slave.begin( 19200); // 19200 baud, 8-bits, even, 1-bit stop
+  Serial.begin( 19200, SERIAL_8E1 ); // 19200 baud, 8-bits, even, 1-bit stop
+  slave.start();
   // use Arduino pins 
   pinMode(relay, OUTPUT);
  delay(500);
