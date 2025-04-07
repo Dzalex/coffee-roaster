@@ -1,5 +1,6 @@
 #include <ModbusRtu.h>
 #include <max6675.h>
+#include <TimerOne.h>
 
 // data array for modbus network sharing
 uint16_t au16data[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 };
@@ -19,14 +20,15 @@ int thermoCLK = 6;
 
 MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
 
-int relay = 9;
+const int relay = 9;
 
 void setup() {
   Serial.begin(19200, SERIAL_8E1);  // 19200 baud, 8-bits, even, 1-bit stop
   slave.start();
-  // use Arduino pins
-  pinMode(relay, OUTPUT);
-  delay(500);
+
+  Timer1.initialize(1000000);  // 1000000us = 1s PWM cycle
+  delay(5);
+  Timer1.pwm(relay, 0);
 }
 
 void loop() {
@@ -37,6 +39,6 @@ void loop() {
   slave.poll(au16data, 16);
 
   // write relay value using pwm
-  analogWrite(relay, (au16data[4] / 100.0) * 255);
-  delay(500);
+  Timer1.pwm(relay, (au16data[4] / 100) * 1023);
+  delay(1000);
 }
