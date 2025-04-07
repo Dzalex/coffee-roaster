@@ -27,8 +27,17 @@ void setup() {
   slave.start();
 
   Timer1.initialize(1000000);  // 1000000us = 1s PWM cycle
+  Timer1.attachInterrupt(setNewPWMDuty);
   delay(5);
   Timer1.pwm(relay, 0);
+
+  au16data[2] = 500;
+}
+
+void setNewPWMDuty(void)
+{
+  // write relay value using pwm
+  Timer1.pwm(relay, (au16data[4] / 100.0) * 1023);
 }
 
 void loop() {
@@ -38,7 +47,5 @@ void loop() {
   // poll modbus registers
   slave.poll(au16data, 16);
 
-  // write relay value using pwm
-  Timer1.pwm(relay, (au16data[4] / 100) * 1023);
-  delay(1000);
+  delay(100);
 }
