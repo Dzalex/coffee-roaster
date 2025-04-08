@@ -46,6 +46,4 @@ void loop() {
 
   // poll modbus registers
   slave.poll(au16data, 16);
-
-  delay(100);
 }
