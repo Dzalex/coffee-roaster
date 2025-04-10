@@ -38,12 +38,13 @@ void setNewPWMDuty(void)
 {
   // write relay value using pwm
   Timer1.pwm(relay, (au16data[4] / 100.0) * 1023);
+
+  // write current thermocouple value
+  // For the MAX6675 to update, you must delay AT LEAST 250ms between reads!
+  au16data[2] = (uint16_t)(thermocouple.readCelsius() * 100);
 }
 
 void loop() {
-  // write current thermocouple value
-  au16data[2] = ((uint16_t)thermocouple.readCelsius() * 100);
-
   // poll modbus registers
   slave.poll(au16data, 16);
 }
