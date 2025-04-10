@@ -46,5 +46,5 @@ void setNewPWMDuty(void)
 
 void loop() {
   // poll modbus registers
-  slave.poll(au16data, 16);
+  slave.poll(au16data, sizeof(au16data));
 }
